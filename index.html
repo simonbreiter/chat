@@ -6,82 +6,31 @@
     <script src="/node_modules/socket.io-client/dist/socket.io.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
+        html,
         body {
-            font-family: "Open Sans", sans-serif;
-            margin: 0 0 4rem 0;
+            height: 100%;
         }
-
-        form {
-            position: fixed;
-            bottom: 0;
-            display: flex;
-            width: 100%;
-            box-shadow: 0px 00px 40px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        input[type="text"] {
-            font-size: 1rem;
-            padding: 1rem;
-            flex: 1;
-            border: 2px solid black;
-            margin: 0;
-            border-radius: 0;
-        }
-
-        input[type="text"]:focus {
-            outline: 2px solid blueviolet;
-            font-size: 1rem;
-        }
-
-        input[type="submit"] {
-            width: 8rem;
-            height: 4rem;
-            border: none;
+        body {
             background-color: blueviolet;
-            font-size: 1rem;
             color: white;
-            -webkit-appearance: none;
+            font-family: "Open Sans", sans-serif;
+            font-size: 22px;
         }
-
-        ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        li {
-            padding: 1rem;
-        }
-
-        li:nth-child(odd) {
-            background-color: #efefef;
+        div {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
         }
     </style>
 </head>
 <body>
-<ul class="messages">
-</ul>
-<form action="">
-    <input id="input" type="text" autocomplete="off"/>
-    <input type="submit">
-</form>
-<script>
-    const socket = io()
-    const form = document.querySelector('form')
-    const textInput = document.querySelector('#input')
-    const messages = document.querySelector('.messages')
-    const userName = prompt("Please enter your name:")
-
-    form.addEventListener('submit', function(e) {
-        e.preventDefault()
-        socket.emit('chat message', userName, textInput.value)
-        textInput.value = ''
-        return false
-    })
-    socket.on('chat message', function(userName, msg) {
-        const li = document.createElement('li')
-        li.innerHTML = `${userName}: ${msg}`
-        messages.appendChild(li)
-    })
-</script>
+<div>
+    <h1>Chat</h1>
+    <p>Welcome!</p>
+    <p>To create and/or join a chat, type your room in the URL.</p>
+    <p>Have fun!</p>
+</div>
 </body>
 </html>
