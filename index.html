@@ -73,11 +73,11 @@
 
     form.addEventListener('submit', function(e) {
         e.preventDefault()
-        socket.emit('chat message', textInput.value)
+        socket.emit('chat message', userName, textInput.value)
         textInput.value = ''
         return false
     })
-    socket.on('chat message', function(msg) {
+    socket.on('chat message', function(userName, msg) {
         const li = document.createElement('li')
         li.innerHTML = `${userName}: ${msg}`
         messages.appendChild(li)
