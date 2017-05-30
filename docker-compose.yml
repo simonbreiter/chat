@@ -1,0 +1,6 @@
+chat:
+  container_name: chat
+  build: .
+  mem_limit: 300000000
+  ports:
+    - 8070:3000

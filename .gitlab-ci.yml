@@ -1,0 +1,19 @@
+stages:
+  - build
+  - deploy
+build:
+  image: docker:latest
+  services:
+  - docker:dind
+  stage: build
+  script:
+    - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD $DOCKER_REGISTRY
+    - docker build -t $DOCKER_REGISTRY/simonbreiter/chat .
+    - docker push $DOCKER_REGISTRY/simonbreiter/chat
+  only:
+    - master
+deploy:
+  stage: deploy
+  image: cdrx/rancher-gitlab-deploy
+  script:
+   - upgrade --rancher-url $RANCHER_URL --rancher-key $RANCHER_ACCESS_KEY --rancher-secret $RANCHER_SECRET_KEY --stack chat --service chat --no-start-before-stopping
