@@ -20,15 +20,15 @@ io.sockets.on('connection', function(socket) {
 });
 
 io.on('connection', function(socket) {
-    console.log('a user connected')
-    socket.on('room', function(room) {
-        console.log('joined room: ' + room)
+    socket.on('room', function(room, user) {
+        console.log(`${user} joined room ${room}`)
+        io.sockets.in(room).emit('chat message', {user: "System", msg: `${user} joined!`});
         socket.on('disconnect', function() {
-            console.log('user disconnected')
+            console.log(`${user} disconnected room ${room}`)
+            io.sockets.in(room).emit('chat message', {user: "System", msg: `${user} disconnected!`});
         })
-        socket.on('chat message', function(userName, msg) {
-            console.log(msg)
-            io.sockets.in(room).emit('chat message', userName, msg);
+        socket.on('chat message', function(data) {
+            io.sockets.in(room).emit('chat message', {user: data.user, msg: data.msg});
         })
     })
 })

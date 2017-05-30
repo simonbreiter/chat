@@ -68,26 +68,25 @@
     const form = document.querySelector('form')
     const textInput = document.querySelector('#input')
     const messages = document.querySelector('.messages')
-    const userName = prompt("Please enter your name:")
+    const user = prompt("Please enter your name:")
     const room = window.location.pathname
     const socket = io()
 
     socket.on('connect', function() {
-        console.log("Client connected")
-        console.log("Room: " + room)
-        socket.emit('room', room)
+        console.log(`Client connected to room ${room}`)
+        socket.emit('room', room, user)
     })
 
     form.addEventListener('submit', function(e) {
         e.preventDefault()
-        socket.emit('chat message', userName, textInput.value)
+        socket.emit('chat message', {user: user, msg: textInput.value})
         textInput.value = ''
-        return false
     })
-    socket.on('chat message', function(userName, msg) {
+    socket.on('chat message', function(data) {
         const li = document.createElement('li')
-        li.innerHTML = `${userName}: ${msg}`
+        li.innerHTML = `<b>${data.user}:</b> ${data.msg}`
         messages.appendChild(li)
+        document.body.scrollTop = document.body.scrollHeight
     })
 </script>
 </body>
