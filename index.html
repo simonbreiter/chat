@@ -10,27 +10,34 @@
         body {
             height: 100%;
         }
-        body {
-            background-color: blueviolet;
-            color: white;
-            font-family: "Open Sans", sans-serif;
-            font-size: 22px;
-        }
-        div {
+        body,
+        main {
             display: flex;
             align-items: center;
             justify-content: center;
             flex-direction: column;
+        }
+        body {
+            color: black;
+            font-family: "Open Sans", sans-serif;
+            font-size: 1.5rem;
+        }
+        main {
             text-align: center;
+        }
+        svg {
+            width: 50vw;
+            max-width:25rem;
+            height: auto;
         }
     </style>
 </head>
 <body>
-<div>
-    <h1>Chat</h1>
-    <p>Welcome!</p>
+<main>
+    <svg width="100%" height="100%" viewBox="0 0 217 217" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:1.41421;"><path d="M217,86.8c0,-47.906 -48.617,-86.8 -108.5,-86.8c-59.883,0 -108.5,38.894 -108.5,86.8c0,28.311 17.258,54.843 46.241,71.088l-13.691,59.112l47.837,-46.364c9.169,1.967 18.62,2.964 28.113,2.964c59.883,0 108.5,-38.894 108.5,-86.8Z" style="fill:blueviolet;"/></svg>
+    <h1>CHAT</h1>
     <p>To create and/or join a chat, type your room in the URL.</p>
     <p>Have fun!</p>
-</div>
+</main>
 </body>
 </html>

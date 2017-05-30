@@ -16,34 +16,21 @@
             bottom: 0;
             display: flex;
             width: 100%;
-            box-shadow: 0px 00px 40px 10px rgba(0, 0, 0, 0.2);
         }
-
         input[type="text"] {
             font-size: 1rem;
             padding: 1rem;
             flex: 1;
-            border: 2px solid black;
             margin: 0;
             border-radius: 0;
-        }
-
-        input[type="text"]:focus {
-            outline: 2px solid blueviolet;
-            font-size: 1rem;
-        }
-
-        input[type="submit"] {
-            width: 8rem;
-            height: 4rem;
             border: none;
-            background-color: blueviolet;
-            font-size: 1rem;
-            color: white;
-            -webkit-appearance: none;
+            border-top: 1px solid rgb(216, 216, 216);
+            background-color: rgb(246, 246, 246);
         }
-
-        ul {
+        input[type="text"]:focus {
+            outline: none;
+        }
+        ol {
             list-style: none;
             padding: 0;
         }
@@ -51,18 +38,13 @@
         li {
             padding: 1rem;
         }
-
-        li:nth-child(odd) {
-            background-color: #efefef;
-        }
     </style>
 </head>
 <body>
-<ul class="messages">
-</ul>
+<ol class="messages">
+</ol>
 <form action="">
-    <input id="input" type="text" autocomplete="off"/>
-    <input type="submit">
+    <input id="input" type="text" autocomplete="off" placeholder="Write something..." />
 </form>
 <script>
     const form = document.querySelector('form')
@@ -72,6 +54,8 @@
     const room = window.location.pathname
     const socket = io()
 
+    document.title = `Chatroom ${room}`
+
     socket.on('connect', function() {
         console.log(`Client connected to room ${room}`)
         socket.emit('room', room, user)
@@ -79,8 +63,10 @@
 
     form.addEventListener('submit', function(e) {
         e.preventDefault()
-        socket.emit('chat message', {user: user, msg: textInput.value})
-        textInput.value = ''
+        if(textInput.value) {
+            socket.emit('chat message', {user: user, msg: textInput.value})
+            textInput.value = ''
+        }
     })
     socket.on('chat message', function(data) {
         const li = document.createElement('li')
