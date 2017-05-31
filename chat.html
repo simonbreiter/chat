@@ -67,6 +67,11 @@
             padding: 0;
         }
 
+        .messages__message--system {
+            color: #bebebe;
+            font-style: italic;
+        }
+
         .users__user {
             padding: 1rem 0;
         }
@@ -81,7 +86,7 @@
         }
 
         .users__user:before {
-            content: "•";
+            content: "●";
             color: green;
             margin-right: .5rem;
         }
@@ -162,7 +167,15 @@
         document.body.scrollTop = document.body.scrollHeight
     })
 
-    socket.on('status message', function(data) {
+    socket.on('system message', function(data) {
+        const li = document.createElement('li')
+        li.className = "messages__message--system"
+        li.innerHTML = `System: ${data.msg}`
+        messages.appendChild(li)
+        document.body.scrollTop = document.body.scrollHeight
+    })
+
+    socket.on('user changed', function(data) {
         while (users.hasChildNodes()) {
             users.removeChild(users.lastChild)
         }

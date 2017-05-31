@@ -59,13 +59,13 @@ io.on('connection', function(socket) {
         const currentRoom = rooms.rooms.filter(r => r.name === room)[0]
         console.log(currentRoom.users)
         currentRoom.addUser(user)
-        io.sockets.in(room).emit('chat message', {user: "System", msg: `${user} joined!`});
-        io.sockets.in(room).emit('status message', {users: currentRoom.users});
+        io.sockets.in(room).emit('system message', {msg: `${user} joined!`});
+        io.sockets.in(room).emit('user changed', {users: currentRoom.users});
         socket.on('disconnect', function() {
             currentRoom.removeUser(user)
             console.log(`${user} disconnected room ${room}`)
-            io.sockets.in(room).emit('chat message', {user: "System", msg: `${user} disconnected!`});
-            io.sockets.in(room).emit('status message', {users: currentRoom.users});
+            io.sockets.in(room).emit('system message', {user: "System", msg: `${user} disconnected!`});
+            io.sockets.in(room).emit('user changed', {users: currentRoom.users});
         })
         socket.on('chat message', function(data) {
             io.sockets.in(room).emit('chat message', {user: data.user, msg: data.msg});
