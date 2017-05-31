@@ -6,9 +6,37 @@
     <script src="/node_modules/socket.io-client/dist/socket.io.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
+        html {
+            box-sizing: border-box;
+        }
+        *, *:before, *:after {
+            box-sizing: inherit;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+        
         body {
             font-family: "Open Sans", sans-serif;
             margin: 0 0 4rem 0;
+            line-height: 1.4;
+            display: flex;
+        }
+
+        aside {
+            background-color: #f6f6f6;
+            padding: 2rem;
+            border-right: 1px solid rgb(216, 216, 216);
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+        }
+
+        main {
+            padding: 2rem 0;
+            margin-left: 250px;
         }
 
         form {
@@ -17,6 +45,7 @@
             display: flex;
             width: 100%;
         }
+
         input[type="text"] {
             font-size: 1rem;
             padding: 1rem;
@@ -25,36 +54,92 @@
             border-radius: 0;
             border: none;
             border-top: 1px solid rgb(216, 216, 216);
-            background-color: rgb(246, 246, 246);
+            background-color: #f6f6f6;
         }
+
         input[type="text"]:focus {
             outline: none;
         }
-        ol {
+
+        .users,
+        .messages {
             list-style: none;
             padding: 0;
         }
 
-        li {
+        .users__user {
+            padding: 1rem 0;
+        }
+
+        aside p {
+            padding: 1rem 0;
+        }
+
+        main p,
+        main li {
             padding: 1rem;
+        }
+
+        .users__user:before {
+            content: "•";
+            color: green;
+            margin-right: .5rem;
+        }
+
+        @media screen and (max-width: 800px) {
+            body {
+                flex-direction: column;
+            }
+            main {
+                margin-left: initial;
+            }
+            aside {
+                border-top: none;
+                border-bottom: 1px solid rgb(216, 216, 216);
+                width: initial;
+                position: initial;
+                height: initial;
+            }
+            .users {
+                display: flex;
+            }
+            .users__user:after {
+                content: ",";
+                margin-right: .5rem;
+            }
+            .users__user:last-of-type:after {
+                content: "";
+            }
         }
     </style>
 </head>
 <body>
-<ol class="messages">
-</ol>
-<form action="">
-    <input id="input" type="text" autocomplete="off" placeholder="Write something..." />
-</form>
+<aside>
+    <p>User online:</p>
+    <ul class="users">
+    </ul>
+</aside>
+<main>
+    <p class="channel"></p>
+    <ol class="messages">
+    </ol>
+    <form action="">
+        <input id="input" type="text" autocomplete="off" placeholder="Write something..." />
+    </form>
+</main>
 <script>
     const form = document.querySelector('form')
     const textInput = document.querySelector('#input')
     const messages = document.querySelector('.messages')
+    const users = document.querySelector('.users')
+    const channel = document.querySelector('.channel')
     const user = prompt("Please enter your name:")
     const room = window.location.pathname
     const socket = io()
 
     document.title = `Chatroom ${room}`
+    channel.innerHTML = `<b>Chatroom ${room}</b>`
+
 
     socket.on('connect', function() {
         console.log(`Client connected to room ${room}`)
@@ -68,10 +153,25 @@
             textInput.value = ''
         }
     })
+
     socket.on('chat message', function(data) {
         const li = document.createElement('li')
+        li.className = "messages__message"
         li.innerHTML = `<b>${data.user}:</b> ${data.msg}`
         messages.appendChild(li)
+        document.body.scrollTop = document.body.scrollHeight
+    })
+
+    socket.on('status message', function(data) {
+        while (users.hasChildNodes()) {
+            users.removeChild(users.lastChild)
+        }
+        for(let user of data.users) {
+            const li = document.createElement('li')
+            li.className = "users__user"
+            li.innerText = user.name
+            users.appendChild(li)
+        }
         document.body.scrollTop = document.body.scrollHeight
     })
 </script>
