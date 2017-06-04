@@ -46,25 +46,18 @@ app.get('/:room', function(req, res) {
     res.sendFile(__dirname + '/chat.html')
 })
 
-io.sockets.on('connection', function(socket) {
-    socket.on('room', function(room) {
-        socket.join(room)
-        rooms.addRoom(room)
-    });
-});
-
 io.on('connection', function(socket) {
     socket.on('room', function(room, user) {
         console.log(`${user} joined room ${room}`)
         const currentRoom = rooms.rooms.filter(r => r.name === room)[0]
         console.log(currentRoom.users)
         currentRoom.addUser(user)
-        io.sockets.in(room).emit('system message', {msg: `${user} joined!`});
+        io.sockets.in(room).emit('system message', {msg: `${user} joined`});
         io.sockets.in(room).emit('user changed', {users: currentRoom.users});
         socket.on('disconnect', function() {
             currentRoom.removeUser(user)
             console.log(`${user} disconnected room ${room}`)
-            io.sockets.in(room).emit('system message', {user: "System", msg: `${user} disconnected!`});
+            io.sockets.in(room).emit('system message', {user: "System", msg: `${user} disconnected`});
             io.sockets.in(room).emit('user changed', {users: currentRoom.users});
         })
         socket.on('chat message', function(data) {
