@@ -48,9 +48,10 @@ app.get('/:room', function(req, res) {
 
 io.on('connection', function(socket) {
     socket.on('room', function(room, user) {
+        socket.join(room)
+        rooms.addRoom(room)
         console.log(`${user} joined room ${room}`)
         const currentRoom = rooms.rooms.filter(r => r.name === room)[0]
-        console.log(currentRoom.users)
         currentRoom.addUser(user)
         io.sockets.in(room).emit('system message', {msg: `${user} joined`});
         io.sockets.in(room).emit('user changed', {users: currentRoom.users});
